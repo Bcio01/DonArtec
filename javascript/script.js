@@ -62,7 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
+    
+    
     // Counter animation for statistics
     function animateCounter() {
         const counters = document.querySelectorAll('.counter');
