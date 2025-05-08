@@ -63,15 +63,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    function scrollToSection(event, sectionId) {
-        event.preventDefault(); // Evita el cambio en la URL
-        const targetSection = document.getElementById(sectionId);
-        
-        if (targetSection) {
-            targetSection.scrollIntoView({ behavior: 'smooth' });
-            window.history.pushState(null, "", window.location.pathname); // Limpia el fragmento de la URL
-        }
-    }
+    const navLinks = document.querySelectorAll('.nav-links a');
+    
+    // Agregar event listener a cada enlace
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Prevenir el comportamiento predeterminado del enlace
+            e.preventDefault();
+            
+            // Obtener el ID de la sección sin el #
+            const targetId = this.getAttribute('href').split('#')[1];
+            
+            // Si hay un ID válido, desplazar a esa sección
+            if (targetId) {
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    // Hacer scroll suave a la sección
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            } else {
+                // Si es un enlace a la página principal sin ancla
+                window.location.href = this.getAttribute('href');
+            }
+        });
+    });
 
 
     // Counter animation for statistics
