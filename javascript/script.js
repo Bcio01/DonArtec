@@ -68,27 +68,52 @@ document.addEventListener('DOMContentLoaded', function() {
     // Agregar event listener a cada enlace
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            // Prevenir el comportamiento predeterminado del enlace
-            e.preventDefault();
+            // Obtener la URL completa
+            const href = this.getAttribute('href');
             
-            // Obtener el ID de la sección sin el #
-            const targetId = this.getAttribute('href').split('#')[1];
-            
-            // Si hay un ID válido, desplazar a esa sección
-            if (targetId) {
-                const targetElement = document.getElementById(targetId);
-                if (targetElement) {
-                    // Hacer scroll suave a la sección
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth'
-                    });
+            // Comprobar si contiene un ancla (#)
+            if (href.includes('#')) {
+                // Verificar si estamos ya en index.html o si necesitamos navegar primero
+                const currentPage = window.location.pathname.split('/').pop();
+                const isIndexPage = currentPage === 'https://bcio01.github.io/DonArtec/' || currentPage === '';
+                const targetIsIndexPage = href.startsWith('https://bcio01.github.io/DonArtec/') || (isIndexPage && href.startsWith('#'));
+                
+                // Si estamos en index.html y el enlace también apunta a index.html o a un ancla local
+                if (isIndexPage && targetIsIndexPage) {
+                    e.preventDefault(); // Prevenir navegación predeterminada
+                    
+                    // Extraer el ID de la sección objetivo
+                    let targetId;
+                    if (href.includes('https://bcio01.github.io/DonArtec/#')) {
+                        targetId = href.split('#')[1];
+                    } else if (href.startsWith('#')) {
+                        targetId = href.substring(1);
+                    }
+                    
+                    if (targetId) {
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement) {
+                            // Calcular la posición correcta considerando la altura del navbar
+                            const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                            
+                            // Hacer scroll suave a la sección sin modificar la URL
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                } else {
+                    // Si no estamos en index.html y necesitamos navegar a ella
+                    // Dejamos que el comportamiento por defecto funcione
+                    // No hacemos preventDefault() aquí
                 }
-            } else {
-                // Si es un enlace a la página principal sin ancla
-                window.location.href = this.getAttribute('href');
             }
+            // Si el enlace no tiene ancla, dejamos el comportamiento predeterminado
         });
     });
+
 
 
     // Counter animation for statistics
