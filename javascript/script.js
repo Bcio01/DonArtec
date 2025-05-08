@@ -63,7 +63,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    
+    function scrollToSection(event, sectionId) {
+        event.preventDefault(); // Evita que la URL muestre #donar
+        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, "", window.location.pathname); // Evita que se añada # en la URL
+    }
+
     // Counter animation for statistics
     function animateCounter() {
         const counters = document.querySelectorAll('.counter');
