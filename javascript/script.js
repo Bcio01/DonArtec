@@ -64,10 +64,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     function scrollToSection(event, sectionId) {
-        event.preventDefault(); // Evita que la URL muestre #donar
-        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
-        window.history.pushState(null, "", window.location.pathname); // Evita que se añada # en la URL
+        event.preventDefault(); // Evita el cambio en la URL
+        const targetSection = document.getElementById(sectionId);
+        
+        if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth' });
+            window.history.pushState(null, "", window.location.pathname); // Limpia el fragmento de la URL
+        }
     }
+
 
     // Counter animation for statistics
     function animateCounter() {
